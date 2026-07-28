@@ -42,10 +42,17 @@ def export_flows(filename="flows_backup.json"):
     finally:
         db.close()
 
-def import_flows(filename="flows_backup.json"):
-    db: Session = SessionLocal()
+def import_flows():
+    print("Membaca flows_backup.json...")
+    db = SessionLocal()
+    
+    backup_file = os.path.join(os.path.dirname(__file__), 'flows_backup.json')
+    if not os.path.exists(backup_file):
+        print("File flows_backup.json tidak ditemukan!")
+        return
+        
     try:
-        with open(filename, 'r') as f:
+        with open(backup_file, 'r') as f:
             data = json.load(f)
             
         print("Memulai import data...")
