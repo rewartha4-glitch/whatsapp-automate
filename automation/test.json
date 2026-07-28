@@ -1,0 +1,15 @@
+{
+    "journeyId": "FLOW_02_INFORMASI_UMUM",
+    "description": "2. MENU => Informasi Umum",
+    "phone": "628216505555",
+    "steps": [
+        { "action": "sendMessage", "text": "menu" },
+        { "action": "wait", "durationMs": 3000 },
+        { "action": "clickList", "text": "Informasi Umum" },
+        { "action": "wait", "durationMs": 3000 },
+        { "action": "sendMessage", "text": "1" },
+        { "action": "wait", "durationMs": 3000 },
+        { "action": "validate", "type": "contains", "expected": "Daisy bantu infokan ya untuk outlet Tunas Daihatsu Pecenongan" },
+        { "action": "takeScreenshot" }
+    ]
+}

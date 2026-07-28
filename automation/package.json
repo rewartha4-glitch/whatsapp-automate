@@ -1,0 +1,22 @@
+{
+  "name": "automation-engine",
+  "version": "1.0.0",
+  "description": "Playwright runner for WhatsApp Chatbot Monitoring",
+  "main": "dist/runner.js",
+  "scripts": {
+    "build": "tsc",
+    "login": "ts-node src/login.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "jsqr": "^1.4.0",
+    "playwright": "^1.41.2",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/qrcode-terminal": "^0.12.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
