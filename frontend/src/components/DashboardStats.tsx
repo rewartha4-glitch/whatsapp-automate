@@ -21,18 +21,18 @@ export default function DashboardStats() {
         const journeys = await journeysRes.json();
         const history = await historyRes.json();
 
-        const passCount = history.filter((h: any) => h.status === 'PASS').length;
-        const totalFinished = history.filter((h: any) => h.status === 'PASS' || h.status === 'FAIL').length;
+        const passCount = Array.isArray(history) ? history.filter((h: any) => h.status === 'PASS').length : 0;
+        const totalFinished = Array.isArray(history) ? history.filter((h: any) => h.status === 'PASS' || h.status === 'FAIL').length : 0;
         const successRate = totalFinished ? Math.round((passCount / totalFinished) * 100) : 0;
         
-        const durations = history.filter((h: any) => h.duration_ms).map((h: any) => h.duration_ms);
+        const durations = Array.isArray(history) ? history.filter((h: any) => h.duration_ms).map((h: any) => h.duration_ms) : [];
         const avgDuration = durations.length ? durations.reduce((a: number, b: number) => a + b, 0) / durations.length : 0;
 
         const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-        const runsLast24h = history.filter((h: any) => new Date(h.start_time).getTime() > oneDayAgo).length;
+        const runsLast24h = Array.isArray(history) ? history.filter((h: any) => new Date(h.start_time).getTime() > oneDayAgo).length : 0;
 
         setStats({
-          totalJourneys: journeys.length || 0,
+          totalJourneys: Array.isArray(journeys) ? journeys.length : 0,
           successRate,
           avgDuration,
           runsLast24h

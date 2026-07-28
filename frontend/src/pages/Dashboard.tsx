@@ -12,7 +12,11 @@ export default function Dashboard() {
     try {
       const res = await fetch('/api/history?limit=20');
       const data = await res.json();
-      setHistory(data);
+      if (Array.isArray(data)) {
+        setHistory(data);
+      } else {
+        console.error('Invalid history response:', data);
+      }
     } catch (e) {
       console.error(e);
     } finally {

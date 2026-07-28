@@ -179,7 +179,21 @@ def delete_journey(journey_id: str, db: Session = Depends(database.get_db)):
 @router.get("/history")
 def get_history(db: Session = Depends(database.get_db), limit: int = 10):
     executions = db.query(models.JourneyExecution).order_by(models.JourneyExecution.start_time.desc()).limit(limit).all()
-    return executions
+    return [
+        {
+            "id": ex.id,
+            "journey_id": ex.journey_id,
+            "version_id": ex.version_id,
+            "status": ex.status,
+            "start_time": ex.start_time,
+            "end_time": ex.end_time,
+            "duration_ms": ex.duration_ms,
+            "worker_id": ex.worker_id,
+            "video_path": ex.video_path,
+            "trace_path": ex.trace_path
+        }
+        for ex in executions
+    ]
 
 @router.get("/history/{execution_id}")
 def get_history_detail(execution_id: str, db: Session = Depends(database.get_db)):
@@ -190,8 +204,28 @@ def get_history_detail(execution_id: str, db: Session = Depends(database.get_db)
     steps = db.query(models.JourneyExecutionStep).filter(models.JourneyExecutionStep.execution_id == execution_id).order_by(models.JourneyExecutionStep.step_index).all()
     
     return {
-        "execution": execution,
-        "steps": steps
+        "execution": {
+            "id": execution.id,
+            "journey_id": execution.journey_id,
+            "status": execution.status,
+            "start_time": execution.start_time,
+            "end_time": execution.end_time,
+            "duration_ms": execution.duration_ms
+        },
+        "steps": [
+            {
+                "id": step.id,
+                "step_index": step.step_index,
+                "action": step.action,
+                "status": step.status,
+                "error_message": step.error_message,
+                "start_time": step.start_time,
+                "end_time": step.end_time,
+                "duration_ms": step.duration_ms,
+                "screenshot_path": step.screenshot_path
+            }
+            for step in steps
+        ]
     }
 
 class ScheduleRequest(BaseModel):

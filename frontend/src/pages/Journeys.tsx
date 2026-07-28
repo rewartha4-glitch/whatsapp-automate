@@ -14,7 +14,11 @@ export default function Journeys() {
     try {
       const res = await fetch('/api/journeys');
       const data = await res.json();
-      setJourneys(data);
+      if (Array.isArray(data)) {
+        setJourneys(data);
+      } else {
+        console.error('Invalid journeys response:', data);
+      }
     } catch (e) {
       console.error(e);
     } finally {
