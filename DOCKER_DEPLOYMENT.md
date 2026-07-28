@@ -140,3 +140,41 @@ git pull
 docker compose up -d --build
 ```
 Hanya dengan perintah di atas, Docker akan otomatis mendeteksi perubahan, mem-_build_ ulang bagian yang berubah saja, dan me-_restart_ kontainer tanpa harus mematikan seluruh aplikasi.
+
+---
+
+## FASE 5: Konfigurasi Nginx di Server (Host)
+
+Karena Anda menggunakan **Opsi 1** (menggunakan Nginx asli di server Anda sebagai _Reverse Proxy_), maka aplikasi WhatsApp di dalam Docker ini berjalan dan hanya mendengarkan akses dari jaringan internal (localhost) di port `8085`.
+
+Agar aplikasi ini dapat diakses publik melalui Nginx server Anda (misalnya dengan nama domain `whatsapp.domainanda.com`), buat _Server Block_ (konfigurasi Nginx) baru di server Anda, contohnya di `/etc/nginx/sites-available/whatsapp`:
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    # Jika menggunakan SSL/HTTPS, tambahkan listen 443 ssl beserta path sertifikatnya
+    
+    server_name whatsapp.domainanda.com; # Ganti dengan domain atau IP Anda
+
+    location / {
+        # Meneruskan traffic ke frontend Docker kita
+        proxy_pass http://127.0.0.1:8085;
+        
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+Setelah membuat konfigurasi di atas:
+1. Aktifkan konfigurasi: `sudo ln -s /etc/nginx/sites-available/whatsapp /etc/nginx/sites-enabled/`
+2. Test Nginx: `sudo nginx -t`
+3. Restart Nginx: `sudo systemctl restart nginx`
+
+Aplikasi WhatsApp Anda kini sudah dapat diakses dengan aman melalui Nginx utama Anda!
