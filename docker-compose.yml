@@ -8,6 +8,18 @@ services:
     volumes:
       - redis_data:/data
 
+  mysql:
+    image: mysql:8.0
+    container_name: whatsapp_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-chatbot_monitor}
+      MYSQL_USER: ${DB_USER:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   backend:
     build:
       context: ./backend
@@ -15,6 +27,7 @@ services:
     container_name: whatsapp_backend
     depends_on:
       - redis
+      - mysql
     restart: unless-stopped
     volumes:
       - ./backend:/app/backend
@@ -55,3 +68,4 @@ services:
 
 volumes:
   redis_data:
+  mysql_data:
