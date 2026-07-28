@@ -21,3 +21,32 @@ def run_journey_task(journey_id: str, version_id: int):
         return {"status": "FAIL", "error": str(e)}
     finally:
         db.close()
+
+@app.task(name="backend.tasks.start_session_task")
+def start_session_task():
+    import subprocess
+    import os
+    import json
+    
+    automation_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'automation'))
+    status_file = os.path.join(automation_dir, 'login_status.json')
+    
+    with open(status_file, "w") as f:
+        json.dump({"status": "STARTING", "qr": None}, f)
+        
+    subprocess.Popen(['node', 'dist/login-api.js'], cwd=automation_dir)
+
+@app.task(name="backend.tasks.stop_session_task")
+def stop_session_task():
+    import subprocess
+    import os
+    import json
+    try:
+        subprocess.call(['pkill', '-f', 'login-api.js'])
+    except:
+        pass
+        
+    automation_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'automation'))
+    status_file = os.path.join(automation_dir, 'login_status.json')
+    with open(status_file, "w") as f:
+        json.dump({"status": "STOPPED", "qr": None}, f)

@@ -241,17 +241,8 @@ def get_workers(db: Session = Depends(database.get_db)):
 
 @router.post("/session/start")
 def start_session():
-    import subprocess
-    import os
-    import json
-    
-    automation_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'automation'))
-    status_file = os.path.join(automation_dir, 'login_status.json')
-    
-    with open(status_file, "w") as f:
-        json.dump({"status": "STARTING", "qr": None}, f)
-        
-    subprocess.Popen(['node', 'dist/login-api.js'], cwd=automation_dir)
+    from .tasks import start_session_task
+    start_session_task.delay()
     return {"status": "started"}
 
 @router.get("/session/status")
@@ -272,18 +263,7 @@ def get_session_status():
 
 @router.post("/session/stop")
 def stop_session():
-    import subprocess
-    import os
-    import json
-    try:
-        subprocess.call(['pkill', '-f', 'login-api.js'])
-    except:
-        pass
-        
-    automation_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'automation'))
-    status_file = os.path.join(automation_dir, 'login_status.json')
-    with open(status_file, "w") as f:
-        json.dump({"status": "STOPPED", "qr": None}, f)
-        
+    from .tasks import stop_session_task
+    stop_session_task.delay()
     return {"status": "stopped"}
 
