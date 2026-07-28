@@ -1,8 +1,13 @@
 import sys
 import json
 from sqlalchemy.orm import Session
-from backend.database import SessionLocal, engine
-from backend import models
+try:
+    from backend.database import SessionLocal, engine
+    from backend import models
+except ModuleNotFoundError:
+    # Jika dijalankan dari dalam Docker (dimana isi backend/ ada di root /app)
+    from database import SessionLocal, engine
+    import models
 
 def export_flows(filename="flows_backup.json"):
     db: Session = SessionLocal()
