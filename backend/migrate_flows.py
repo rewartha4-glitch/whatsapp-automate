@@ -1,5 +1,6 @@
 import sys
 import json
+import os
 from sqlalchemy.orm import Session
 try:
     from backend.database import SessionLocal, engine
