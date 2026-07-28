@@ -37,6 +37,7 @@ services:
     volumes:
       - ./backend:/app/backend
       - ./database:/app/database
+      - ./automation:/app/automation
     env_file:
       - .env
     environment:

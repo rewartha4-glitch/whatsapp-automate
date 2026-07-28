@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const STATUS_FILE = path.resolve(__dirname, '../../login_status.json');
+const STATUS_FILE = path.resolve(__dirname, '../login_status.json');
 
 function updateStatus(status: string, qrData?: string) {
     fs.writeFileSync(STATUS_FILE, JSON.stringify({
