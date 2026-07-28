@@ -59,6 +59,8 @@ services:
     volumes:
       - ./backend:/app/backend
       - ./automation:/app/automation
+      - /app/automation/dist
+      - /app/automation/node_modules
       - ./screenshots:/app/screenshots
     env_file:
       - .env
