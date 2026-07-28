@@ -19,6 +19,8 @@ services:
     volumes:
       - ./backend:/app
       - ./database:/app/database
+    env_file:
+      - .env
     environment:
       - REDIS_URL=redis://redis:6379/0
 
@@ -35,6 +37,8 @@ services:
       - ./backend:/app/backend
       - ./automation:/app/automation
       - ./screenshots:/app/screenshots
+    env_file:
+      - .env
     environment:
       - REDIS_URL=redis://redis:6379/0
 

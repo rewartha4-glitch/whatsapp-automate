@@ -4,8 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
 
-from . import models, api
-from .database import engine
+try:
+    from . import models, api
+    from .database import engine
+except ImportError:
+    import models, api
+    from database import engine
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -27,11 +31,16 @@ app.include_router(api.router)
 
 @app.on_event("startup")
 def startup_event():
-    from .scheduler import start_scheduler, update_schedule
+    try:
+        from .scheduler import start_scheduler, update_schedule
+        from .database import SessionLocal
+    except ImportError:
+        from scheduler import start_scheduler, update_schedule
+        from database import SessionLocal
+        
     start_scheduler()
     
     # Load config from db and start
-    from .database import SessionLocal
     db = SessionLocal()
     try:
         cron_config = db.query(models.Configuration).filter(models.Configuration.key == "schedule_cron").first()
@@ -45,7 +54,11 @@ def startup_event():
 
 @app.on_event("shutdown")
 def shutdown_event():
-    from .scheduler import stop_scheduler
+    try:
+        from .scheduler import stop_scheduler
+    except ImportError:
+        from scheduler import stop_scheduler
+        
     stop_scheduler()
 
 if __name__ == "__main__":
