@@ -7,8 +7,10 @@ import AddJourney from './pages/AddJourney';
 import Scheduler from './pages/Scheduler';
 import Session from './pages/Session';
 
+import React from 'react';
+
 // Simple Auth Guard
-const RequireAuth = ({ children }: { children: JSX.Element }) => {
+const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const auth = localStorage.getItem('auth');
   if (!auth) {
     return <Navigate to="/login" replace />;
