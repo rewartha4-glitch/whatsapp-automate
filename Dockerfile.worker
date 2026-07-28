@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.41.2-jammy
+FROM mcr.microsoft.com/playwright:v1.61.1-jammy
 
 # Install Python and pip
 RUN apt-get update && apt-get install -y \
