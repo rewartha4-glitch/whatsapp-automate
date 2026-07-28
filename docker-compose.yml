@@ -17,7 +17,7 @@ services:
       - redis
     restart: unless-stopped
     volumes:
-      - ./backend:/app
+      - ./backend:/app/backend
       - ./database:/app/database
     env_file:
       - .env
