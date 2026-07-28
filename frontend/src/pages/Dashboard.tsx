@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import DashboardStats from '../components/DashboardStats';
 
 export default function Dashboard() {
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchHistory = async () => {
