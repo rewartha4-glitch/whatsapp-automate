@@ -3,14 +3,18 @@ from apscheduler.triggers.cron import CronTrigger
 import asyncio
 
 # Global scheduler instance
-scheduler = AsyncIOScheduler()
+scheduler = None
 
 def start_scheduler():
+    global scheduler
+    if not scheduler:
+        scheduler = AsyncIOScheduler()
     if not scheduler.running:
         scheduler.start()
 
 def stop_scheduler():
-    if scheduler.running:
+    global scheduler
+    if scheduler and scheduler.running:
         scheduler.shutdown()
 
 async def execute_scheduled_journeys():
@@ -19,6 +23,11 @@ async def execute_scheduled_journeys():
     await runner.run_all_journeys()
 
 def update_schedule(cron_expression: str, enabled: bool):
+    global scheduler
+    if not scheduler:
+        scheduler = AsyncIOScheduler()
+        scheduler.start()
+        
     # Remove existing job if any
     if scheduler.get_job("run_all_journeys_job"):
         scheduler.remove_job("run_all_journeys_job")
