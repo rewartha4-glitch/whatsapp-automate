@@ -22,7 +22,7 @@ export default function AddJourney() {
   useEffect(() => {
     if (editId) {
       setLoading(true);
-      fetch(`http://localhost:8000/api/journey/${editId}`)
+      fetch(`/api/journey/${editId}`)
         .then(res => res.json())
         .then(data => {
           setJourneyId(data.id);
@@ -84,7 +84,7 @@ export default function AddJourney() {
     });
 
     try {
-      const res = await fetch('http://localhost:8000/api/journey/upload', {
+      const res = await fetch('/api/journey/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

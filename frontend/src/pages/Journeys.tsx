@@ -12,7 +12,7 @@ export default function Journeys() {
 
   const fetchJourneys = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/journeys');
+      const res = await fetch('/api/journeys');
       const data = await res.json();
       setJourneys(data);
     } catch (e) {
@@ -29,7 +29,7 @@ export default function Journeys() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this journey?')) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/journey/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/journey/${id}`, { method: 'DELETE' });
       if (res.ok) {
         setJourneys(journeys.filter((j: any) => j.id !== id));
         toast.success('Journey deleted');
@@ -43,7 +43,7 @@ export default function Journeys() {
 
   const handleRunSingle = async (id: string) => {
     try {
-      const res = await fetch('http://localhost:8000/api/journey/run', {
+      const res = await fetch('/api/journey/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ journeyId: id })

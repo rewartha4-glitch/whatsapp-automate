@@ -8,7 +8,7 @@ export default function Scheduler() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/schedule')
+    fetch('/api/schedule')
       .then(res => res.json())
       .then(data => {
         if (data.cron) setCron(data.cron);
@@ -20,7 +20,7 @@ export default function Scheduler() {
 
   const handleSave = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/schedule', {
+      const res = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cron, enabled })

@@ -15,8 +15,8 @@ export default function DashboardStats() {
     const fetchStats = async () => {
       try {
         const [journeysRes, historyRes] = await Promise.all([
-          fetch('http://localhost:8000/api/journeys'),
-          fetch('http://localhost:8000/api/history?limit=100')
+          fetch('/api/journeys'),
+          fetch('/api/history?limit=100')
         ]);
         const journeys = await journeysRes.json();
         const history = await historyRes.json();

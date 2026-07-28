@@ -21,7 +21,7 @@ export default function Session() {
 
   const fetchStatus = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/session/status');
+      const res = await fetch('/api/session/status');
       const data = await res.json();
       setStatus(data.status);
       setQr(data.qr);
@@ -33,7 +33,7 @@ export default function Session() {
   const startSession = async () => {
     setLoading(true);
     try {
-      await fetch('http://localhost:8000/api/session/start', { method: 'POST' });
+      await fetch('/api/session/start', { method: 'POST' });
       setStatus('STARTING');
       setQr(null);
     } catch (e) {
@@ -46,7 +46,7 @@ export default function Session() {
   const stopSession = async () => {
     setLoading(true);
     try {
-      await fetch('http://localhost:8000/api/session/stop', { method: 'POST' });
+      await fetch('/api/session/stop', { method: 'POST' });
       setStatus('STOPPED');
       setQr(null);
     } catch (e) {

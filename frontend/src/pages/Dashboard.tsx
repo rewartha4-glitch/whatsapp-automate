@@ -10,7 +10,7 @@ export default function Dashboard() {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/history?limit=20');
+      const res = await fetch('/api/history?limit=20');
       const data = await res.json();
       setHistory(data);
     } catch (e) {
@@ -22,7 +22,7 @@ export default function Dashboard() {
 
   const handleRunAll = async () => {
     try {
-      await fetch('http://localhost:8000/api/journey/run-all', { method: 'POST' });
+      await fetch('/api/journey/run-all', { method: 'POST' });
       toast.success('All flows queued for execution!');
       fetchHistory();
     } catch (e) {
@@ -33,7 +33,7 @@ export default function Dashboard() {
   const handleCancel = async (id: string) => {
     if (!window.confirm('Cancel this execution?')) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/journey/cancel/${id}`, { method: 'POST' });
+      const res = await fetch(`/api/journey/cancel/${id}`, { method: 'POST' });
       if (res.ok) {
         toast.success('Execution cancelled');
         fetchHistory();
