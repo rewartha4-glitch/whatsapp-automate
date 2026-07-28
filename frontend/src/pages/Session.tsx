@@ -60,6 +60,22 @@ export default function Session() {
     }
   };
 
+  const logoutSession = async () => {
+    if (!window.confirm("Are you sure you want to log out? This will delete the current session and require you to scan a QR code again.")) return;
+    
+    setLoading(true);
+    try {
+      await fetch('/api/session/logout', { method: 'POST' });
+      setStatus('STOPPED');
+      setQr(null);
+      setErrorMsg(null);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full gap-6 max-w-2xl mx-auto">
       <div>
@@ -114,9 +130,12 @@ export default function Session() {
               </svg>
             </div>
             <h3 className="text-lg font-medium text-green-400">Successfully Logged In!</h3>
-            <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-center text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
               Your session is now active and the bot can start sending messages.
             </p>
+            <button className="btn" onClick={logoutSession} disabled={loading} style={{ borderColor: 'var(--error)', color: 'var(--error)' }}>
+              Logout / Create New Session
+            </button>
           </div>
         )}
         

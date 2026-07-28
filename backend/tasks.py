@@ -50,3 +50,24 @@ def stop_session_task():
     status_file = os.path.join(automation_dir, 'login_status.json')
     with open(status_file, "w") as f:
         json.dump({"status": "STOPPED", "qr": None}, f)
+
+@app.task(name="backend.tasks.logout_session_task")
+def logout_session_task():
+    import subprocess
+    import os
+    import json
+    import shutil
+    try:
+        subprocess.call(['pkill', '-f', 'login-api.js'])
+    except:
+        pass
+        
+    automation_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'automation'))
+    status_file = os.path.join(automation_dir, 'login_status.json')
+    session_dir = os.path.join(automation_dir, 'storage', 'browser-session')
+    
+    if os.path.exists(session_dir):
+        shutil.rmtree(session_dir, ignore_errors=True)
+        
+    with open(status_file, "w") as f:
+        json.dump({"status": "STOPPED", "qr": None}, f)

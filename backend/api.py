@@ -301,3 +301,9 @@ def stop_session():
     stop_session_task.delay()
     return {"status": "stopped"}
 
+@router.post("/session/logout")
+def logout_session():
+    from .tasks import logout_session_task
+    logout_session_task.delay()
+    return {"status": "logging_out"}
+
