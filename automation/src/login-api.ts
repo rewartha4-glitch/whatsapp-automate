@@ -7,10 +7,11 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const STATUS_FILE = path.resolve(__dirname, '../login_status.json');
 
-function updateStatus(status: string, qrData?: string) {
+function updateStatus(status: string, qrData?: string, error?: string) {
     fs.writeFileSync(STATUS_FILE, JSON.stringify({
         status,
         qr: qrData || null,
+        error: error || null,
         updatedAt: new Date().toISOString()
     }));
 }
@@ -48,13 +49,13 @@ async function login() {
     }
     
     if (!loggedIn) {
-        updateStatus('TIMEOUT');
+        updateStatus('TIMEOUT', undefined, 'Timeout waiting for QR code or login');
     }
     
     await session.context.close();
 }
 
 login().catch(e => {
-    updateStatus('ERROR');
+    updateStatus('ERROR', undefined, String(e.stack || e));
     process.exit(1);
 });

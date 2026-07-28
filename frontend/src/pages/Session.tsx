@@ -4,6 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 export default function Session() {
   const [status, setStatus] = useState<string>('STOPPED');
   const [qr, setQr] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function Session() {
       const data = await res.json();
       setStatus(data.status);
       setQr(data.qr);
+      setErrorMsg(data.error);
     } catch (e) {
       console.error(e);
     }
@@ -36,6 +38,7 @@ export default function Session() {
       await fetch('/api/session/start', { method: 'POST' });
       setStatus('STARTING');
       setQr(null);
+      setErrorMsg(null);
     } catch (e) {
       console.error(e);
     } finally {
@@ -49,6 +52,7 @@ export default function Session() {
       await fetch('/api/session/stop', { method: 'POST' });
       setStatus('STOPPED');
       setQr(null);
+      setErrorMsg(null);
     } catch (e) {
       console.error(e);
     } finally {
@@ -117,7 +121,7 @@ export default function Session() {
         )}
         
         {(status === 'ERROR' || status === 'TIMEOUT') && (
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-4 w-full">
             <div className="w-16 h-16 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center">
               <span className="text-2xl">⚠️</span>
             </div>
@@ -125,6 +129,11 @@ export default function Session() {
             <p className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
               The process timed out or encountered an error. Please try again.
             </p>
+            {errorMsg && (
+              <div className="w-full bg-red-500/10 border border-red-500/20 rounded-lg p-4 text-xs font-mono text-red-300 overflow-auto text-left max-h-[150px]">
+                {errorMsg}
+              </div>
+            )}
             <button className="btn btn-primary" onClick={startSession} disabled={loading}>
               Retry
             </button>
